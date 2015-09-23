@@ -35,7 +35,8 @@
 
 #define kExportTypeDropbox  0
 #define kExportTypeEmail    1
-#define kExportTypeAirPrint 2
+#define kExportTypeBib    2
+#define kExportTypeAirPrint 3
 
 @interface UAExportViewController ()
 {
@@ -160,7 +161,8 @@
                                                           delegate:self
                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
                                             destructiveButtonTitle:nil
-                                                 otherButtonTitles:NSLocalizedString(@"Dropbox", nil), NSLocalizedString(@"Email", nil), NSLocalizedString(@"AirPrint", nil), nil];
+                                                 otherButtonTitles:NSLocalizedString(@"Dropbox", nil), NSLocalizedString(@"Email", nil), NSLocalizedString(@"BibExport", nil),
+                                                     NSLocalizedString(@"AirPrint", nil), nil];
             }
             else
             {
@@ -168,7 +170,8 @@
                                                           delegate:self
                                                  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
                                             destructiveButtonTitle:nil
-                                                 otherButtonTitles:NSLocalizedString(@"Dropbox", nil), NSLocalizedString(@"Email", nil), nil];
+                                                 otherButtonTitles:NSLocalizedString(@"Dropbox", nil), NSLocalizedString(@"Email", nil),
+                                                     NSLocalizedString(@"BibExport", nil), nil];
             }
             [actionSheet showInView:self.view];
         }
@@ -290,6 +293,31 @@
             }
         }
         else if(type == kExportTypeEmail)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                
+                NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Here's your Diabetik data export, generated on %@.", nil), date];
+                MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
+                controller.mailComposeDelegate = self;
+                [controller setSubject:[NSString stringWithFormat:NSLocalizedString(@"Diabetik Export - %@", nil), date]];
+                [controller setMessageBody:message isHTML:NO];
+                if(exportCSV)
+                {
+                    [controller addAttachmentData:csvData mimeType:@"text/csv" fileName:[NSString stringWithFormat:@"%@ Export.csv", date]];
+                }
+                if(exportPDF)
+                {
+                    [controller addAttachmentData:pdfData mimeType:@"text/pdf" fileName:[NSString stringWithFormat:@"%@ Export.pdf", date]];
+                }
+                
+                if (controller)
+                {
+                    [self presentViewController:controller animated:YES completion:nil];
+                }
+            });
+        }
+        else if(type == kExportTypeBib)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
