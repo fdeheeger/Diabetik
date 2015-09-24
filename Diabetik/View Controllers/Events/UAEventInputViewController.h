@@ -31,6 +31,7 @@
 
 // UI
 - (void)presentAddReminder:(id)sender;
+- (void)presentTags:(id)sender;
 - (void)presentMediaOptions:(id)sender;
 - (void)presentGeotagOptions:(id)sender;
 - (void)updateNavigationBar;

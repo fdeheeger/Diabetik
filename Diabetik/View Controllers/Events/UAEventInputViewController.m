@@ -354,6 +354,28 @@
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     [actionSheet showInView:self.view];
 }
+- (void)presentTags:(id)sender
+{
+    [[VKRSAppSoundPlayer sharedInstance] playSound:@"tap-significant"];
+//    UAInputBaseViewController *activeViewController = [self activeViewController];
+    
+    UIActionSheet *actionSheet = nil;
+    actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Hashtags", nil)
+                                              delegate:self
+//                                            delegate:activeViewController
+
+                                     cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                destructiveButtonTitle:nil
+                                     otherButtonTitles:NSLocalizedString(@"#lunch", nil), NSLocalizedString(@"#sleep", nil),
+                                         NSLocalizedString(@"#medication", nil),
+                                         NSLocalizedString(@"#tt", nil),
+                                         NSLocalizedString(@"#wake", nil), nil];
+    actionSheet.tag = kTagsActionSheetTag;
+//    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    [actionSheet showInView:self.view];
+
+    
+}
 - (void)presentMediaOptions:(id)sender
 {
     [[VKRSAppSoundPlayer sharedInstance] playSound:@"tap-significant"];
@@ -550,27 +572,58 @@
 #pragma mark - UIActionSheetDelegate methods
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex > 3) return;
-    
-    NSInteger minutes = 0;
-    switch(buttonIndex)
-    {
-        case 0:
-            minutes = 15;
+    switch (actionSheet.tag) {
+        case 4:
+            
             break;
-        case 1:
-            minutes = 30;
-            break;
-        case 2:
-            minutes = 60;
+            
+        default:
+            if(buttonIndex > 3) return;
+            
+            NSInteger minutes = 0;
+            switch(buttonIndex)
+            {
+                case 0:
+                    minutes = 15;
+                    break;
+                case 1:
+                    minutes = 30;
+                    break;
+                case 2:
+                    minutes = 60;
+                    break;
+            }
+            
+            NSDate *date = [[NSDate date] dateByAddingMinutes:minutes];
+            UATimeReminderViewController *vc = [[UATimeReminderViewController alloc] initWithDate:date];
+            UANavigationController *nvc = [[UANavigationController alloc] initWithRootViewController:vc];
+            nvc.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:nvc animated:YES completion:nil];
             break;
     }
     
-    NSDate *date = [[NSDate date] dateByAddingMinutes:minutes];
-    UATimeReminderViewController *vc = [[UATimeReminderViewController alloc] initWithDate:date];
-    UANavigationController *nvc = [[UANavigationController alloc] initWithRootViewController:vc];
-    nvc.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nvc animated:YES completion:nil];
+    
+//    if(buttonIndex > 3) return;
+//    
+//    NSInteger minutes = 0;
+//    switch(buttonIndex)
+//    {
+//        case 0:
+//            minutes = 15;
+//            break;
+//        case 1:
+//            minutes = 30;
+//            break;
+//        case 2:
+//            minutes = 60;
+//            break;
+//    }
+//    
+//    NSDate *date = [[NSDate date] dateByAddingMinutes:minutes];
+//    UATimeReminderViewController *vc = [[UATimeReminderViewController alloc] initWithDate:date];
+//    UANavigationController *nvc = [[UANavigationController alloc] initWithRootViewController:vc];
+//    nvc.modalPresentationStyle = UIModalPresentationFormSheet;
+//    [self presentViewController:nvc animated:YES completion:nil];
 }
 
 #pragma mark - Keyboard handling

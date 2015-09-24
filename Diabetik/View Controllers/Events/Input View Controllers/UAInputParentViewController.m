@@ -23,6 +23,8 @@
 #import "UAEventMapViewController.h"
 #import "UAReminderController.h"
 
+#import "UAInputBaseViewController.h"
+
 #import "UAMedicineInputViewController.h"
 #import "UAMealInputViewController.h"
 #import "UABGInputViewController.h"
@@ -487,6 +489,27 @@
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     [actionSheet showInView:self.view];
 }
+- (void)presentTags:(id)sender
+{
+    [[VKRSAppSoundPlayer sharedInstance] playSound:@"tap-significant"];
+//    UAEventInputViewCell *cell = (UAEventInputViewCell *)[self.tableView cellForRowAtIndexPath:self.activeControlIndexPath];
+    
+    UIActionSheet *actionSheet = nil;
+    actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Hashtags", nil)
+                                              delegate:self
+                                     cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                destructiveButtonTitle:nil
+                                     otherButtonTitles:NSLocalizedString(@"#lunch", nil),
+                                                       NSLocalizedString(@"#sleep", nil),
+                                                       NSLocalizedString(@"#medication", nil),
+                                                       NSLocalizedString(@"#tt", nil),
+                                                       NSLocalizedString(@"#wake", nil), nil];
+    actionSheet.tag = kTagsActionSheetTag;
+    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    [actionSheet showInView:self.view];
+
+}
+
 - (void)presentMediaOptions:(id)sender
 {
     [[VKRSAppSoundPlayer sharedInstance] playSound:@"tap-significant"];
@@ -728,29 +751,73 @@ willRepositionPopoverToRect:(inout CGRect *)rect
 #pragma mark - UIActionSheetDelegate methods
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex > 3) return;
-    
-    NSInteger minutes = 0;
-    switch(buttonIndex)
-    {
-        case 0:
-            minutes = 15;
+    switch (actionSheet.tag) {
+        case kTagsActionSheetTag:
+
+            NSLog(@"hh");
+            UAInputBaseViewController *yo = (UAInputBaseViewController *)[ self.     ];
+            self->_viewControllers[0]
+            
+//            UAEventNotesTextView *activeTextField = (UAEventNotesTextView *)cell.control;
+            
+            sel
+            
+            //
+            //    UAEventInputViewCell *cell = (UAEventInputViewCell *)[self.tableView cellForRowAtIndexPath:self.activeControlIndexPath];
+            //
+            //    if(!cell)
+            //    {
+            //        [self.tableView scrollToRowAtIndexPath:self.activeControlIndexPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+            //    }
+            //    cell = (UAEventInputViewCell *)[self.tableView cellForRowAtIndexPath:self.activeControlIndexPath];
+            //
+            //    if([cell.control isKindOfClass:[UAEventNotesTextView class]])
+            //    {
+            //        UAEventNotesTextView *activeTextField = (UAEventNotesTextView *)cell.control;
+            //        activeTextField.text = [activeTextField.text stringByAppendingString:@"#"];
+            //    }
+            
+            
             break;
-        case 1:
-            minutes = 30;
-            break;
-        case 2:
-            minutes = 60;
-            break;
-        case 3:
-            minutes = 120;
+            
+        default:
+            if(buttonIndex > 3) return;
+            
+            NSInteger minutes = 0;
+            switch(buttonIndex)
+        {
+            case 0:
+                minutes = 15;
+                break;
+            case 1:
+                minutes = 30;
+                break;
+            case 2:
+                minutes = 60;
+                break;
+            case 3:
+                minutes = 120;
+                break;
+        }
+            
+            switch (actionSheet.tag) {
+                case 1:
+                    NSLog(@"yo", nil);
+                    break;
+                    
+                default:
+                    
+                    break;
+            }
+            
+            NSDate *date = [[NSDate date] dateByAddingMinutes:minutes];
+            UATimeReminderViewController *vc = [[UATimeReminderViewController alloc] initWithDate:date];
+            UANavigationController *nvc = [[UANavigationController alloc] initWithRootViewController:vc];
+            [self presentViewController:nvc animated:YES completion:nil];
             break;
     }
     
-    NSDate *date = [[NSDate date] dateByAddingMinutes:minutes];
-    UATimeReminderViewController *vc = [[UATimeReminderViewController alloc] initWithDate:date];
-    UANavigationController *nvc = [[UANavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:nvc animated:YES completion:nil];
+
 }
 
 #pragma mark - Keyboard handling

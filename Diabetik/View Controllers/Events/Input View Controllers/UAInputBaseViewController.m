@@ -188,7 +188,7 @@
 }
 - (void)updateKeyboardShortcutButtons
 {
-    [self.keyboardShortcutAccessoryView.tagButton setEnabled:NO];
+    [self.keyboardShortcutAccessoryView.tagButton setEnabled:YES];
     if(self.activeControlIndexPath)
     {
         UAEventInputViewCell *cell = (UAEventInputViewCell *)[self.tableView cellForRowAtIndexPath:self.activeControlIndexPath];
@@ -642,7 +642,8 @@
     }
     else if([button isEqual:[shortcutView tagButton]])
     {
-        [self presentTagOptions:button];
+//        [self presentTagOptions:button];
+        [(UAInputParentViewController *)self.parentViewController presentTags:button];
     }
 }
 

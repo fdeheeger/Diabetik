@@ -38,6 +38,8 @@
 #define kExistingImageActionSheetTag 1
 #define kGeotagActionSheetTag 2
 #define kReminderActionSheetTag 3
+#define kTagsActionSheetTag 4
+
 
 #define kDeleteAlertViewTag 0
 #define kGeoTagAlertViewTag 1
